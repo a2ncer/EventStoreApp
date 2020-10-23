@@ -3,8 +3,9 @@ using System.Reflection;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 
-namespace WebApi.Client
+namespace WebApiClient.Client
 {
     /// <summary>
     /// Represents a set of configuration settings
@@ -83,7 +84,7 @@ namespace WebApi.Client
         private static string _dateTimeFormat = ISO8601_DATETIME_FORMAT;
 
         /// <summary>
-        /// Gets or sets the date time format used when serializing in the ApiClient
+        /// Gets or sets the the date time format used when serializing in the ApiClient
         /// By default, it's set to ISO 8601 - "o", for others see:
         /// https://msdn.microsoft.com/en-us/library/az4se3k1(v=vs.110).aspx
         /// and https://msdn.microsoft.com/en-us/library/8kb3ddd4(v=vs.110).aspx
@@ -116,7 +117,7 @@ namespace WebApi.Client
         /// </summary>
         public static String ToDebugReport()
         {
-            String report = "C# SDK (IO.Swagger) Debug Report:\n";
+            String report = "C# SDK (WebApiClient) Debug Report:\n";
             report += "    OS: " + Environment.OSVersion + "\n";
             report += "    .NET Framework Version: " + Assembly
                      .GetExecutingAssembly()

@@ -39,14 +39,14 @@ namespace WebApi.Controllers
 
         // GET api/<SensorsController>/avarage
         [HttpGet("avarage")]
-        public Task<double> GetAvarage([FromBody] GetAvarageSensorsCountEveryMonthQuery request)
+        public Task<double> GetAvarage([FromQuery] GetAvarageSensorsCountEveryMonthQuery request)
         {
             return _mediator.Send(request);
         }
 
         // GET api/<SensorsController>/count
         [HttpGet("count")]
-        public Task<int> GetCount([FromBody] GetSensorsCountOnDateQuery request)
+        public Task<int> GetCount([FromQuery] GetSensorsCountOnDateQuery request)
         {
             return _mediator.Send(request);
         }

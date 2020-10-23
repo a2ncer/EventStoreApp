@@ -7,8 +7,8 @@ namespace Domain.Repositories
     public interface IEventRepository<TModel>
     {
         Task<IEnumerable<TModel>> ProjectAsync(DateTimeOffset occuredDate);
-        Task CreateAsync(TModel model);
-        Task UpdateAsync(TModel model);
-        Task DeleteAsync(TModel model);
+        Task CreateAsync(TModel model, DateTimeOffset? occuredAt = default);
+        Task UpdateAsync(TModel model, DateTimeOffset? occuredAt = default);
+        Task DeleteAsync(TModel model, DateTimeOffset? occuredAt = default);
     }
 }

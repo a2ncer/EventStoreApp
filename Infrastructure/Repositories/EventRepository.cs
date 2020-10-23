@@ -22,14 +22,14 @@ namespace Infrastructure.Repositories
             EnsureIndexesCreated();
         }
 
-        public Task CreateAsync(TModel model)
+        public Task CreateAsync(TModel model, DateTimeOffset? occuredAt = default)
         {
-            return _eventStore.InsertOneAsync(new DomainEvent<TModel>() { EventType = EventType.Created, Model = model });
+            return _eventStore.InsertOneAsync(new DomainEvent<TModel>() { EventType = EventType.Created, Model = model, OccuredAt = occuredAt ?? DateTimeOffset.UtcNow });
         }
 
-        public Task DeleteAsync(TModel model)
+        public Task DeleteAsync(TModel model, DateTimeOffset? occuredAt = default)
         {
-            return _eventStore.InsertOneAsync(new DomainEvent<TModel>() { EventType = EventType.Deleted, Model = model });
+            return _eventStore.InsertOneAsync(new DomainEvent<TModel>() { EventType = EventType.Deleted, Model = model, OccuredAt = occuredAt ?? DateTimeOffset.UtcNow });
         }
 
         public async Task<IEnumerable<TModel>> ProjectAsync(DateTimeOffset occuredDate)
@@ -48,9 +48,9 @@ namespace Infrastructure.Repositories
             return projection.Values;
         }
 
-        public Task UpdateAsync(TModel model)
+        public Task UpdateAsync(TModel model, DateTimeOffset? occuredAt = default)
         {
-            return _eventStore.InsertOneAsync(new DomainEvent<TModel>() { EventType = EventType.Updated, Model = model });
+            return _eventStore.InsertOneAsync(new DomainEvent<TModel>() { EventType = EventType.Updated, Model = model, OccuredAt = occuredAt ?? DateTimeOffset.UtcNow });
         }
 
         protected void CreateIndex(string name, Expression<Func<DomainEvent<TModel>, object>> field)

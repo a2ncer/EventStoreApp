@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
 using RestSharp;
-using WebApi.Client;
+using WebApiClient.Client;
+using WebApiClient.Model;
 
-namespace WebApi.Api
+namespace WebApiClient.Api
 {
     /// <summary>
     /// Represents a collection of functions to interact with the API endpoints
@@ -16,36 +17,38 @@ namespace WebApi.Api
         /// <param name="farmId"></param>
         /// <param name="date"></param>
         /// <param name="state"></param>
-        /// <returns></returns>
-        void ApiV1CowsCountGet (Object farmId, Object date, Object state);
+        /// <returns>int?</returns>
+        int? ApiV1CowsCountGet (Guid? farmId, DateTime? date, CowState state);
         /// <summary>
         ///  
         /// </summary>
-        /// <returns></returns>
-        void ApiV1CowsGet ();
-        /// <summary>
-        ///  
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        void ApiV1CowsIdDelete (Object id);
+        /// <returns>List&lt;Cow&gt;</returns>
+        List<Cow> ApiV1CowsGet ();
         /// <summary>
         ///  
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        void ApiV1CowsIdGet (Object id);
+        void ApiV1CowsIdDelete (Guid? id);
         /// <summary>
         ///  
         /// </summary>
         /// <param name="id"></param>
-        /// <returns></returns>
-        void ApiV1CowsIdPut (Object id);
+        /// <returns>Cow</returns>
+        Cow ApiV1CowsIdGet (Guid? id);
         /// <summary>
         ///  
         /// </summary>
+        /// <param name="id"></param>
+        /// <param name="body"></param>
         /// <returns></returns>
-        void ApiV1CowsPost ();
+        void ApiV1CowsIdPut (Guid? id, CreateCowCommand body);
+        /// <summary>
+        ///  
+        /// </summary>
+        /// <param name="body"></param>
+        /// <returns>Cow</returns>
+        Cow ApiV1CowsPost (CreateCowCommand body);
     }
   
     /// <summary>
@@ -104,13 +107,12 @@ namespace WebApi.Api
         /// <summary>
         ///  
         /// </summary>
-        /// <param name="farmId"></param> 
-        /// <param name="date"></param> 
-        /// <param name="state"></param> 
-        /// <returns></returns>            
-        public void ApiV1CowsCountGet (Object farmId, Object date, Object state)
+        /// <param name="farmId"></param>
+        /// <param name="date"></param>
+        /// <param name="state"></param>
+        /// <returns>int?</returns>
+        public int? ApiV1CowsCountGet (Guid? farmId, DateTime? date, CowState state)
         {
-            
     
             var path = "/api/v1/cows/count";
             path = path.Replace("{format}", "json");
@@ -136,16 +138,15 @@ namespace WebApi.Api
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling ApiV1CowsCountGet: " + response.ErrorMessage, response.ErrorMessage);
     
-            return;
+            return (int?) ApiClient.Deserialize(response.Content, typeof(int?), response.Headers);
         }
     
         /// <summary>
         ///  
         /// </summary>
-        /// <returns></returns>            
-        public void ApiV1CowsGet ()
+        /// <returns>List&lt;Cow&gt;</returns>
+        public List<Cow> ApiV1CowsGet ()
         {
-            
     
             var path = "/api/v1/cows";
             path = path.Replace("{format}", "json");
@@ -168,20 +169,18 @@ namespace WebApi.Api
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling ApiV1CowsGet: " + response.ErrorMessage, response.ErrorMessage);
     
-            return;
+            return (List<Cow>) ApiClient.Deserialize(response.Content, typeof(List<Cow>), response.Headers);
         }
     
         /// <summary>
         ///  
         /// </summary>
-        /// <param name="id"></param> 
-        /// <returns></returns>            
-        public void ApiV1CowsIdDelete (Object id)
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public void ApiV1CowsIdDelete (Guid? id)
         {
-            
             // verify the required parameter 'id' is set
             if (id == null) throw new ApiException(400, "Missing required parameter 'id' when calling ApiV1CowsIdDelete");
-            
     
             var path = "/api/v1/cows/{id}";
             path = path.Replace("{format}", "json");
@@ -211,14 +210,12 @@ namespace WebApi.Api
         /// <summary>
         ///  
         /// </summary>
-        /// <param name="id"></param> 
-        /// <returns></returns>            
-        public void ApiV1CowsIdGet (Object id)
+        /// <param name="id"></param>
+        /// <returns>Cow</returns>
+        public Cow ApiV1CowsIdGet (Guid? id)
         {
-            
             // verify the required parameter 'id' is set
             if (id == null) throw new ApiException(400, "Missing required parameter 'id' when calling ApiV1CowsIdGet");
-            
     
             var path = "/api/v1/cows/{id}";
             path = path.Replace("{format}", "json");
@@ -242,20 +239,19 @@ namespace WebApi.Api
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling ApiV1CowsIdGet: " + response.ErrorMessage, response.ErrorMessage);
     
-            return;
+            return (Cow) ApiClient.Deserialize(response.Content, typeof(Cow), response.Headers);
         }
     
         /// <summary>
         ///  
         /// </summary>
-        /// <param name="id"></param> 
-        /// <returns></returns>            
-        public void ApiV1CowsIdPut (Object id)
+        /// <param name="id"></param>
+        /// <param name="body"></param>
+        /// <returns></returns>
+        public void ApiV1CowsIdPut (Guid? id, CreateCowCommand body)
         {
-            
             // verify the required parameter 'id' is set
             if (id == null) throw new ApiException(400, "Missing required parameter 'id' when calling ApiV1CowsIdPut");
-            
     
             var path = "/api/v1/cows/{id}";
             path = path.Replace("{format}", "json");
@@ -267,7 +263,8 @@ namespace WebApi.Api
             var fileParams = new Dictionary<String, FileParameter>();
             String postBody = null;
     
-                                                    
+                                                postBody = ApiClient.Serialize(body); // http body (model) parameter
+    
             // authentication setting, if any
             String[] authSettings = new String[] {  };
     
@@ -285,10 +282,10 @@ namespace WebApi.Api
         /// <summary>
         ///  
         /// </summary>
-        /// <returns></returns>            
-        public void ApiV1CowsPost ()
+        /// <param name="body"></param>
+        /// <returns>Cow</returns>
+        public Cow ApiV1CowsPost (CreateCowCommand body)
         {
-            
     
             var path = "/api/v1/cows";
             path = path.Replace("{format}", "json");
@@ -299,7 +296,8 @@ namespace WebApi.Api
             var fileParams = new Dictionary<String, FileParameter>();
             String postBody = null;
     
-                                                    
+                                                postBody = ApiClient.Serialize(body); // http body (model) parameter
+    
             // authentication setting, if any
             String[] authSettings = new String[] {  };
     
@@ -311,7 +309,7 @@ namespace WebApi.Api
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling ApiV1CowsPost: " + response.ErrorMessage, response.ErrorMessage);
     
-            return;
+            return (Cow) ApiClient.Deserialize(response.Content, typeof(Cow), response.Headers);
         }
     
     }

@@ -1,6 +1,6 @@
 using System;
 
-namespace WebApi.Client {
+namespace WebApiClient.Client {
   /// <summary>
   /// API Exception
   /// </summary>

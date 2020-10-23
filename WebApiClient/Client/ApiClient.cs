@@ -1,13 +1,17 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text.RegularExpressions;
 using System.IO;
 using System.Web;
+using System.Linq;
+using System.Net;
+using System.Text;
 using Newtonsoft.Json;
 using RestSharp;
 using RestSharp.Extensions;
 
-namespace WebApi.Client
+namespace WebApiClient.Client
 {
     /// <summary>
     /// API client is mainly responible for making the HTTP call to the API backend.
@@ -20,7 +24,7 @@ namespace WebApi.Client
         /// Initializes a new instance of the <see cref="ApiClient" /> class.
         /// </summary>
         /// <param name="basePath">The base path.</param>
-        public ApiClient(String basePath="https://localhost")
+        public ApiClient(String basePath="/")
         {
             BasePath = basePath;
             RestClient = new RestClient(BasePath);
@@ -85,7 +89,7 @@ namespace WebApi.Client
 
             // add file parameter, if any
             foreach(var param in fileParams)
-                request.AddFile(param.Value.Name, param.Value.Writer, param.Value.FileName, param.Value.ContentLength, param.Value.ContentType);
+                request.AddFile(param.Value.Name, param.Value.Writer, param.Value.FileName, param.Value.ContentType);
 
             if (postBody != null) // http body (model) parameter
                 request.AddParameter("application/json", postBody, ParameterType.RequestBody);
@@ -112,7 +116,7 @@ namespace WebApi.Client
         /// <returns>Escaped string.</returns>
         public string EscapeString(string str)
         {
-            return HttpUtility.UrlEncode(str);
+            return RestSharp.Contrib.HttpUtility.UrlEncode(str);
         }
     
         /// <summary>
