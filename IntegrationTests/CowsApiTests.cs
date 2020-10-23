@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Threading.Tasks;
 using WebApiClient.Model;
 using Xunit;
@@ -115,6 +114,7 @@ namespace IntegrationTests
         [Fact]
         public async Task GetCount()
         {
+            //Setup
             await DataBaseHelper.ClearDatabaseAsync();
             var farmId = Guid.NewGuid();
             await DataBaseHelper.CowEventStore.CreateAsync(
@@ -128,22 +128,40 @@ namespace IntegrationTests
                 DateTimeOffset.Parse("10/23/2020 2:00:00 AM"));
             var id = Guid.NewGuid();
             await DataBaseHelper.CowEventStore.CreateAsync(
-                new Domain.Models.Cows.Cow { Id = id, FarmId = farmId, State = Domain.Models.Cows.CowState.Open },
+                new Domain.Models.Cows.Cow { FarmId = farmId, State = Domain.Models.Cows.CowState.Open },
                 DateTimeOffset.Parse("10/23/2020 3:00:00 AM"));
             await DataBaseHelper.CowEventStore.CreateAsync(
-                new Domain.Models.Cows.Cow { Id = id, FarmId = farmId, State = Domain.Models.Cows.CowState.Open },
+                new Domain.Models.Cows.Cow { FarmId = farmId, State = Domain.Models.Cows.CowState.Open },
                 DateTimeOffset.Parse("10/23/2020 3:10:00 AM"));
             await DataBaseHelper.CowEventStore.UpdateAsync(
                 new Domain.Models.Cows.Cow { Id = id, FarmId = farmId, State = Domain.Models.Cows.CowState.Pregnant }, 
                 DateTimeOffset.Parse("10/23/2020 4:00:00 AM"));
-            var cowForDelete = new Domain.Models.Cows.Cow { Id = id, FarmId = farmId, State = Domain.Models.Cows.CowState.Open };
+            
+            var cowForDelete = new Domain.Models.Cows.Cow {FarmId = farmId, State = Domain.Models.Cows.CowState.Open };
             await DataBaseHelper.CowEventStore.CreateAsync(
                 cowForDelete,
                 DateTimeOffset.Parse("10/23/2020 5:30:00 AM"));
             await DataBaseHelper.CowEventStore.DeleteAsync(
                 cowForDelete,
                 DateTimeOffset.Parse("10/23/2020 5:35:00 AM"));
-            var count = CowsApi.ApiV1CowsCountGet(farmId, DateTime.Parse("10/24/2020 12:00:00 AM"), CowState.Open);
+            
+            //Act
+            var count = CowsApi.ApiV1CowsCountGet(farmId, DateTime.Parse("10/23/2020 11:59:59 PM"), CowState.Open);
+            Assert.Equal(4, count);
+            count = CowsApi.ApiV1CowsCountGet(farmId, DateTime.Parse("10/23/2020 3:05:00 AM"), CowState.Open);
+            Assert.Equal(3, count); 
+            count = CowsApi.ApiV1CowsCountGet(farmId, DateTime.Parse("10/23/2020 2:30:00 AM"), CowState.Open);
+            Assert.Equal(2, count);
+            count = CowsApi.ApiV1CowsCountGet(farmId, DateTime.Parse("10/23/2020 4:00:00 AM"), CowState.Pregnant);
+            Assert.Equal(2, count);
+            count = CowsApi.ApiV1CowsCountGet(farmId, DateTime.Parse("10/22/2020 5:20:00 PM"), CowState.Open);
+            Assert.Equal(1, count);
+            count = CowsApi.ApiV1CowsCountGet(farmId, DateTime.Parse("10/22/2020 7:20:35 PM"), CowState.Pregnant);
+            Assert.Equal(1, count);
+            count = CowsApi.ApiV1CowsCountGet(farmId, DateTime.Parse("10/22/2020 2:00:00 PM"), CowState.Open);
+            Assert.Equal(0, count);
+            count = CowsApi.ApiV1CowsCountGet(Guid.NewGuid(), DateTime.Parse("10/22/2020 6:00:00 PM"), CowState.Open);
+            Assert.Equal(0, count);
         }
     }
 }
