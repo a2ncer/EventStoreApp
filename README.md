@@ -9,7 +9,7 @@ http://localhost:5000/swagger
 
 Project | Description
 ------------ | -------------
-IntegrationTests | Tests for REST API, need to be run WebApi and MongoDB
+IntegrationTests | Tests for REST API, need to be running WebApi and MongoDB before running tests
 ApplicationServices | Commands, Queries and Handlers
 Domain | Domain models and abstractions
 Infrastructure | Repositories implementations
@@ -24,15 +24,12 @@ WebApiClient | Genereted API's Client with Swagger generator
 
 **1. How many cows are pregnant on farm "A" on a specific date?**
 
-GET /api/v1/cows/count with parameters. 
-See GetCowsCountOnFarmOnDateQueryHandler and CowsApiTests classes.
+GET /api/v1/cows/count with parameters. See GetCowsCountOnFarmOnDateQueryHandler and CowsApiTests classes.
 
 **2. How many sensors died in June across the platform?**
 
-GET /api/v1/sensors/count with parameters. 
-See GetSensorsCountOnDateQueryHandler class.
+GET /api/v1/sensors/count with parameters. See GetSensorsCountOnDateQueryHandler class.
 
 **3. On average how many new sensors are deployed every month in 2020?**
 
-GET /api/v1/sensors/avarage with parameters. 
-See GetAvarageSensorsCountEveryMonthQueryHandler class.
+GET /api/v1/sensors/avarage with parameters. See GetAvarageSensorsCountEveryMonthQueryHandler class.
